@@ -16,3 +16,6 @@ dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/carlo-nonato/pytableformat"
+
+[tool.setuptools.package-data]
+"pytableformat" = ["py.typed"]
