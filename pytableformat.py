@@ -231,13 +231,3 @@ class Table:
     def format_rows(self, rows: list[list[Any]]):
         columns = [list(column) for column in zip(*rows)]
         return self.format(columns)
-
-def test():
-    t = Table(["|{:^10}|", "  {:^7} |", " {:^} |"], headers=["Header1", "Header2", "Header3"])
-    t.columns[0].hrule_left_char = ">"
-    t.columns[-1].hrule_right_char = "<"
-    print(t.format([["row1", "row2", "row3"], ["test", "testA", "testB"], [1, 22, 333]]))
-    print(t.format_rows([["row1", "row2", "row3"], ["test", "testA", "testB"], ["1", "22", "333"]]))
-
-if __name__ == "__main__":
-    test()
