@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytableformat"
+version = "0.1.0"
+description = "A table format library to print text only tables."
+authors = [
+    { name="Carlo Nonato", email="carlo.nonato95@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/carlo-nonato/pytableformat"
