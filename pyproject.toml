@@ -9,13 +9,16 @@ description = "A table format library to print text only tables."
 authors = [
     { name="Carlo Nonato", email="carlo.nonato95@gmail.com" }
 ]
-license = { text = "MIT" }
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/carlo-nonato/pytableformat"
+
+[tool.setuptools]
+packages = ["pytableformat"]
 
 [tool.setuptools.package-data]
 "pytableformat" = ["py.typed"]
