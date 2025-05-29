@@ -1,3 +1,3 @@
-from .pytableformat import Column, Format, Table
+from .pytableformat import Column, Format, HRule, Table
 
-__all__ = [Column, Format, Table] # type: ignore
+__all__ = [Column, Format, HRule, Table] # type: ignore
