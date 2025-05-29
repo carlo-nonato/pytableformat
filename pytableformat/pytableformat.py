@@ -1,6 +1,7 @@
+from itertools import chain
 import re
 from enum import IntEnum
-from typing import Any
+from typing import Any, Iterable
 
 def escape_curly(string: str) -> str:
     return string.replace("{", "{{").replace("}", "}}")
@@ -90,6 +91,8 @@ class Column:
     - if `width` is omitted, content maximum width will be used instead
     - `width` and `precision` are always equal, so `precision` can be omitted.
 
+    The first element provided to `Column.format()` is considered the column header.
+
     Example:
 
     ```
@@ -146,14 +149,17 @@ class Column:
         return (f"{left_border}{self.left_padding}{self.content_format}{self.right_padding}"
                 f"{right_border}")
 
-    def format(self, column: list[Any]) -> list[str]:
-        max_len = str(max(len(self.content_format.format(col)) for col in column))
-        self.content_format.width = self.width or max_len
+    def format(self, column: Iterable[Any]):
+        """Format the column. The first element provided is considered the column header."""
+
+        output: list[str] = []
+        column = list(column)
+        self.content_format.width = (self.width or
+                                     str(max(len(self.content_format.format(c)) for c in column)))
+        format = str(self)
         hrule = (f"{self.hrule_left_char * bool(self.left_border)}"
                  f"{self.hrule_char * self.total_width}"
                  f"{self.hrule_right_char * bool(self.right_border)}")
-        format = str(self)
-        output: list[str] = []
 
         if self.hrule >= HRule.FRAME:
             output.append(hrule)
@@ -216,18 +222,13 @@ class Table:
         self.headers = headers or []
         self.columns = [Column(format, hrule, hrule_format) for format in column_formats]
 
-    def format(self, columns: list[list[Any]]):
-        if len(self.columns) != len(columns):
-            raise ValueError("Columns and content length mismatch"
-                             f"({len(self.columns)}, {len(columns)})")
-
-        for header, column in zip(self.headers, columns):
-            column.insert(0, header)
-
+    def format(self, columns: Iterable[Iterable[Any]]):
+        if self.headers:
+            columns = (chain((header,), column) for header, column in zip(self.headers, columns))
         formatted_columns = (column.format(content)
                              for column, content in zip(self.columns, columns))
         return "\n".join("".join(row) for row in zip(*formatted_columns, strict=True))
 
-    def format_rows(self, rows: list[list[Any]]):
+    def format_rows(self, rows: Iterable[Iterable[Any]]):
         columns = [list(column) for column in zip(*rows)]
         return self.format(columns)
