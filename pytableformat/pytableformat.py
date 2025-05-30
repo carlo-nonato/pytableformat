@@ -136,7 +136,6 @@ class Column:
         self.left_border: str = groups["left_border"]
         self.left_padding: str = groups["left_padding"]
         self.content_format = Format(groups["content_format"] or "")
-        self.width = self.content_format.width
         self.content_format.precision = self.content_format.width
         self.right_padding: str = groups["right_padding"]
         self.right_border: str = groups["right_border"]
@@ -154,8 +153,9 @@ class Column:
 
         output: list[str] = []
         column = list(column)
-        self.content_format.width = (self.width or
-                                     str(max(len(self.content_format.format(c)) for c in column)))
+        auto_width = not self.content_format.width
+        if auto_width:
+            self.content_format.width = str(max(len(self.content_format.format(c)) for c in column))
         format = str(self)
         hrule = (f"{self.hrule_left_char * bool(self.left_border)}"
                  f"{self.hrule_char * self.total_width}"
@@ -177,6 +177,9 @@ class Column:
 
         if self.hrule == HRule.FRAME or self.hrule == HRule.FRAME_HEADER:
             output.append(hrule)
+
+        if auto_width:
+            self.content_format.width = ""
 
         return output
 
